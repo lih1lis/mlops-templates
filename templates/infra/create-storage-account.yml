@@ -10,5 +10,7 @@ steps:
       scriptType: 'ps'
       scriptLocation: 'inlineScript'
       inlineScript: |
-        az account set --subscription $(subscription_id)
+        # The task already logs in and sets the subscription.
+        # This command just ensures the context is re-affirmed before the create command.
+        az account set --subscription $env:AZURE_SUBSCRIPTION_ID
         az storage account create --name $(terraform_st_storage_account) --resource-group $(terraform_st_resource_group) --location $(location) --sku Standard_LRS
