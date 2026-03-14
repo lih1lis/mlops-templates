@@ -9,19 +9,19 @@ steps:
       addSpnToEnvironment: true
       scriptLocation: 'inlineScript'
       inlineScript: |
-          if (![string]::IsNullOrEmpty($env:servicePrincipalId)) {
-            $SUBSCRIPTION_ID = az account show --query 'id' --output tsv
-            $TENANT_ID = az account show --query 'tenantId' --output tsv
-            $CLIENT_ID = $env:servicePrincipalId
-            $CLIENT_SECRET = $env:servicePrincipalKey
-          } else {
-            $SUBSCRIPTION_ID = ''
-            $TENANT_ID = ''
-            $CLIENT_ID = ''
-            $CLIENT_SECRET = ''
-          }
+          if [[ ! -z "${servicePrincipalId:-}" ]]; then
+            SUBSCRIPTION_ID=$(az account show --query 'id' --output tsv)
+            TENANT_ID=$(az account show --query 'tenantId' --output tsv)
+            CLIENT_ID=${servicePrincipalId:-}
+            CLIENT_SECRET=${servicePrincipalKey:-}
+          else
+            SUBSCRIPTION_ID=
+            TENANT_ID=
+            CLIENT_ID=
+            CLIENT_SECRET=
+          fi
           
           # Define environment variables
-          Write-Host "##vso[task.setvariable variable=TENANT_ID]'$TENANT_ID'"
-          Write-Host "##vso[task.setvariable variable=CLIENT_ID]'$CLIENT_ID'"
-          Write-Host "##vso[task.setvariable variable=CLIENT_SECRET]'$CLIENT_SECRET'"
+          echo "##vso[task.setvariable variable=TENANT_ID]'$TENANT_ID'"
+          echo "##vso[task.setvariable variable=CLIENT_ID]'$CLIENT_ID'"
+          echo "##vso[task.setvariable variable=CLIENT_SECRET]'$CLIENT_SECRET'"

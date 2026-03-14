@@ -6,6 +6,6 @@ steps:
     displayName: 'Create Resource Group'
     inputs:
       azureSubscription: '$(ado_service_connection_rg)'
-      scriptType: 'ps'
+      scriptType: 'bash'
       scriptLocation: 'inlineScript'
       inlineScript: 'az group create --location $(location) --name $(terraform_st_resource_group)'
